@@ -1,11 +1,13 @@
-using Infrastructure.Data;
+using _InfraStructure.Data;
+using _InfraStructure.Repositories;
+using Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +21,7 @@ namespace E_Commerce
             {
                 options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
             var app = builder.Build();
 
@@ -34,6 +37,20 @@ namespace E_Commerce
             app.UseAuthorization();
 
             app.MapControllers();
+
+            using var scope = app.Services.CreateScope();
+            var service = scope.ServiceProvider;
+            var context = service.GetRequiredService<StoreContext>();
+            var logger = service.GetRequiredService<ILogger<Program>>();
+            try
+            {
+                await context.Database.MigrateAsync();
+                await SeedStore.SeedData(context);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An Error Occuired");
+            }
 
             app.Run();
         }
