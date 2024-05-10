@@ -3,13 +3,13 @@ using Core.DTOs;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Spacifications;
+using E_Commerce.Controllers;
+using E_Commerce.Errors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ProductsController : ControllerBase
+    public class ProductsController : BaseApiController
     {
         private readonly IGenericRepository<Product> productRepo;
         private readonly IGenericRepository<ProductType> typeRepo;
@@ -35,11 +35,13 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ProductDto>> GetProduct(int id)
         {
             var spec = new ProductsWithTypesAndBrands(id);
             var product = await productRepo.GetEntityWithSpec(spec);
-            if (product == null) return NotFound("Not Found Product with this id");
+            if (product == null) return NotFound(new ApiResponse(404));
             return Ok(mapper.Map<Product, ProductDto>(product));
         }
 

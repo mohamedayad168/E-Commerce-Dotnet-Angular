@@ -1,6 +1,6 @@
 using _InfraStructure.Data;
-using _InfraStructure.Repositories;
-using Core.Interfaces;
+using E_Commerce.Extensions;
+using E_Commerce.MiddleWare;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce
@@ -13,19 +13,11 @@ namespace E_Commerce
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-            builder.Services.AddDbContext<StoreContext>(options =>
-            {
-                options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
-            builder.Services.AddScoped<IProductRepository, ProductRepository>();
-            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            builder.Services.AddApplicationServices(builder.Configuration);
 
             var app = builder.Build();
+            app.UseMiddleware<ExceptionMiddleWare>();
+            app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
