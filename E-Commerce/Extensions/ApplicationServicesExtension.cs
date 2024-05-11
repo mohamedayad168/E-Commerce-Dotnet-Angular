@@ -38,6 +38,14 @@ namespace E_Commerce.Extensions
                     return new BadRequestObjectResult(errorResponse);
                 };
             });
+            Services.AddCors(opt =>
+            {
+                opt.AddPolicy("CorsPolicy", options =>
+                {
+                    options.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200");
+                });
+            });
+
             return Services;
         }
     }

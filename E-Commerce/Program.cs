@@ -30,6 +30,8 @@ namespace E_Commerce
 
             app.UseStaticFiles();
 
+            app.UseCors("CorsPolicy");
+
             app.UseAuthorization();
 
             app.MapControllers();

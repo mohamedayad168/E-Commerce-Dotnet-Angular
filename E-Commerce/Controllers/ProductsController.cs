@@ -5,6 +5,7 @@ using Core.Interfaces;
 using Core.Spacifications;
 using E_Commerce.Controllers;
 using E_Commerce.Errors;
+using E_Commerce.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -26,12 +27,18 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<ProductDto>>> GetProducts()
+        public async Task<ActionResult<List<ProductDto>>> GetProducts([FromQuery] ProductParams productParams)
         {
-            var spec = new ProductsWithTypesAndBrands();
+            var spec = new ProductsWithTypesAndBrands(productParams);
+            var specCount = new ProductWithFiltersForCountSpecification(productParams);
+            var totalItems = await productRepo.CountAsync(specCount);
+
             var products = await productRepo.AllAsync(spec);
             if (products == null) return NotFound();
-            return Ok(mapper.Map<List<Product>, List<ProductDto>>(products));
+
+            var data = mapper.Map<List<Product>, List<ProductDto>>(products);
+
+            return Ok(new Pagination<ProductDto>(productParams.PageIndex, productParams.PageSize, totalItems, data));
         }
 
         [HttpGet("{id}")]
