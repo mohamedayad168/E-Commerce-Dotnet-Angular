@@ -2,17 +2,16 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace _InfraStructure.Data.Config
+namespace _InfraStructure.Data.Config;
+
+public class ProductConfigration : IEntityTypeConfiguration<Product>
 {
-    public class ProductConfigration : IEntityTypeConfiguration<Product>
+    public void Configure(EntityTypeBuilder<Product> builder)
     {
-        public void Configure(EntityTypeBuilder<Product> builder)
-        {
-            builder.Property(p => p.PictureUrl).IsRequired();
-            builder.Property(p => p.Name).IsRequired().HasMaxLength(180);
-            builder.Property(p => p.Description).IsRequired().HasMaxLength(180);
-            builder.HasOne(p => p.ProductBrand).WithMany().HasForeignKey(p => p.ProductBrandId);
-            builder.HasOne(p => p.ProductType).WithMany().HasForeignKey(p => p.ProductTypeId);
-        }
+        builder.Property(p => p.PictureUrl).IsRequired();
+        builder.Property(p => p.Name).IsRequired().HasMaxLength(180);
+        builder.Property(p => p.Description).IsRequired().HasMaxLength(180);
+        builder.HasOne(p => p.ProductBrand).WithMany().HasForeignKey(p => p.ProductBrandId);
+        builder.HasOne(p => p.ProductType).WithMany().HasForeignKey(p => p.ProductTypeId);
     }
 }

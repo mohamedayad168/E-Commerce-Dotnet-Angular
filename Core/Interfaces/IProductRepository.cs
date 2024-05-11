@@ -1,15 +1,14 @@
 ﻿using Core.Entities;
 
-namespace Core.Interfaces
+namespace Core.Interfaces;
+
+public interface IProductRepository
 {
-    public interface IProductRepository
-    {
-        Task<Product> GetProductById(int id);
+    Task<Product> GetProductById(int id);
 
-        Task<List<Product>> GetProducts();
+    Task<List<Product>> GetProducts();
 
-        Task<List<ProductBrand>> GetProductsBrand();
+    Task<List<ProductBrand>> GetProductsBrand();
 
-        Task<List<ProductType>> GetProductsType();
-    }
+    Task<List<ProductType>> GetProductsType();
 }

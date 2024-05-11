@@ -1,18 +1,17 @@
 ﻿using Core.Entities;
 using Core.Spacifications;
 
-namespace Core.Interfaces
+namespace Core.Interfaces;
+
+public interface IGenericRepository<T> where T : BaseEntity
 {
-    public interface IGenericRepository<T> where T : BaseEntity
-    {
-        Task<T> GetByIdAsync(int id);
+    Task<T> GetByIdAsync(int id);
 
-        Task<List<T>> GetAllAsync();
+    Task<List<T>> GetAllAsync();
 
-        Task<T> GetEntityWithSpec(ISpecification<T> specification);
+    Task<T> GetEntityWithSpec(ISpecification<T> specification);
 
-        Task<List<T>> AllAsync(ISpecification<T> specification);
+    Task<List<T>> AllAsync(ISpecification<T> specification);
 
-        Task<int> CountAsync(ISpecification<T> spec);
-    }
+    Task<int> CountAsync(ISpecification<T> spec);
 }
