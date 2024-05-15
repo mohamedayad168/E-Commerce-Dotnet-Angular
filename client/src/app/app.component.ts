@@ -14,13 +14,7 @@ export class AppComponent implements OnInit{
   constructor(private http:HttpClient) {
   }
   ngOnInit(): void {
-    this.http.get<Pagination<Product>[]>("https://localhost:5001/api/Products?PageSize=50").subscribe({
-      next: (response:any) => this.products = response.data,
-      error: err => console.log(err),
-      complete: () => {
-        console.log("completed")
-      }
-    })
+    
   }
 
 }
