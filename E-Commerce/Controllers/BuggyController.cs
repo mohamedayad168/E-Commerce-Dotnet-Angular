@@ -26,7 +26,7 @@ public class BuggyController : BaseApiController
     [HttpGet("not-found/{id}")]
     public ActionResult GetNotFoundRequest(int id)
     {
-        return Ok();
+        return BadRequest();
     }
 
     [HttpGet("server-error")]

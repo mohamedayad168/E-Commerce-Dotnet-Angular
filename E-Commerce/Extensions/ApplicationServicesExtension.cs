@@ -4,6 +4,7 @@ using Core.Interfaces;
 using E_Commerce.Errors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 
 namespace E_Commerce.Extensions;
 
@@ -20,7 +21,13 @@ public static class ApplicationServicesExtension
         {
             options.UseSqlite(config.GetConnectionString("DefaultConnection"));
         });
+        Services.AddSingleton<IConnectionMultiplexer>(c =>
+        {
+            var option = ConfigurationOptions.Parse(config.GetConnectionString("Redis")!);
+            return ConnectionMultiplexer.Connect(option);
+        });
         Services.AddScoped<IProductRepository, ProductRepository>();
+        Services.AddScoped<IBasketRepository, BasketRepository>();
         Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         Services.Configure<ApiBehaviorOptions>(options =>

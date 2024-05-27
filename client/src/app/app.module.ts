@@ -6,10 +6,12 @@ import { AppComponent } from './app.component';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {CoreModule} from "./core/core.module";
 import {ShopModule} from "./shop/shop.module";
 import {PaginationModule} from "ngx-bootstrap/pagination";
+import {HomeModule} from "./home/home.module";
+import {ErrorInterceptor} from "./core/interceptors/error.interceptor";
 
 @NgModule({
   declarations: [
@@ -23,11 +25,13 @@ import {PaginationModule} from "ngx-bootstrap/pagination";
     BrowserAnimationsModule,
     HttpClientModule,
     CoreModule,
-    ShopModule,
+
+    HomeModule
 
   ],
   providers: [
-    provideClientHydration()
+    provideClientHydration(),
+    {provide:HTTP_INTERCEPTORS,useClass:ErrorInterceptor,multi:true}
   ],
   bootstrap: [AppComponent]
 })
